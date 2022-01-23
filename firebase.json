@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "target": "auth",
+    "public": "build/web",
+    "appAssociation": "AUTO",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+    	{ "source": "/dl/**", "dynamicLinks": true },
+    	{ "source": "**", "destination": "/index.html" }
+    ]
+  }
+}

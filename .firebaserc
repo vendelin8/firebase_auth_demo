@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "fir-auth-demo-39a29"
+  },
+  "targets": {
+    "fir-auth-demo-39a29": {
+      "hosting": {
+        "auth": [
+          "fir-auth-demo-39a29"
+        ]
+      }
+    }
+  }
+}
