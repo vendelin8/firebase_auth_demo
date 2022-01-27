@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -184,16 +185,35 @@ class _MainFormState extends State<MainForm> with WidgetsBindingObserver {
         return;
       }
       _addLog('Register OK');
-      await userCred!.user!.sendEmailVerification(ActionCodeSettings(
-        url: 'https://firebase-auth-demo.ga/dl?',
-        dynamicLinkDomain: 'firebase-auth-demo.ga',
-        androidPackageName: 'com.example.firebase_auth_bug_demo',
-        androidInstallApp: true,
-        androidMinimumVersion: '21',
-        iOSBundleId: 'com.example.firebase_auth_bug_demo',
-        handleCodeInApp: _handleCodeInApp,
-      ));
-      _addLog('Register email SENT');
+      final ActionCodeSettings acs;
+      const url = 'https://firebase-auth-demo.ga/dl?';
+      const domain = 'firebase-auth-demo.ga';
+      const package = 'com.example.firebase_auth_bug_demo';
+      if (kIsWeb) {
+        acs = ActionCodeSettings(
+          url: url,
+          dynamicLinkDomain: domain,
+          handleCodeInApp: _handleCodeInApp,
+        );
+      } else if (Platform.isAndroid) {
+        acs = ActionCodeSettings(
+          url: url,
+          dynamicLinkDomain: domain,
+          androidPackageName: package,
+          androidInstallApp: true,
+          androidMinimumVersion: '21',
+          handleCodeInApp: _handleCodeInApp,
+        );
+      } else {
+        acs = ActionCodeSettings(
+          url: url,
+          dynamicLinkDomain: domain,
+          iOSBundleId: package,
+          handleCodeInApp: _handleCodeInApp,
+        );
+      }
+      await userCred!.user!.sendEmailVerification(acs);
+      _addLog('Register email SENT handleCodeInApp: ${acs.handleCodeInApp}');
     } on FirebaseAuthException catch (e, st) {
       _onAuthError('Register email sending', e, st);
     }
